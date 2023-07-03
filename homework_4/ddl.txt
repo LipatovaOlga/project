@@ -1,0 +1,20 @@
+create tablespace project_tablespace location 'D:\OTUS';
+create database project with tablespace project_tablespace;
+create user user1 with password '123456'; 
+grant all privileges on database "project" to user1;
+\c project;
+create schema project_schema;
+create table project_schema.users (id integer primary key,username varchar(255) unique, registration_date date default current_date);
+create table project_schema.discounts (id integer primary key,persent integer check (persent>0 and persent<100));
+create sequence sequence_order_number start 1;
+create table project_schema.orders (id integer primary key,order_date date default current_date,order_number integer not null default nextval('sequence_order_number'),users_id integer references project_schema.users (id),discounts_id integer references project_schema.discounts (id));
+create table project_schema.suppliers (id integer primary key,name varchar(255) not null,phone varchar(255));
+create table project_schema.categories (id integer primary key,name varchar(255) not null);
+create table project_schema.products (id integer primary key,name varchar(255) not null,note varchar(1000),picture varchar(255),count integer not null check (count>=0),categories_id integer references project_schema.categories (id),suppliers_id integer references project_schema.suppliers (id));
+create table project_schema.price_history (id integer primary key,price integer not null check (price>0),begin_date date not null default current_date,products_id integer references project_schema.products (id));
+create table project_schema.order_details (id integer primary key,products_id integer references project_schema.products (id),count integer not null check (count>0),orders_id integer references project_schema.orders (id));
+
+
+
+
+
