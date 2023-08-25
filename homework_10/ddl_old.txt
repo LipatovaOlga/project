@@ -1,0 +1,66 @@
+create database my_pr_old;
+use my_pr_old;
+
+/* Пользователи */ 
+create table users (
+	id integer primary key,
+	username varchar(255) unique, 
+	registration_date date
+);
+
+/* Скидки */
+create table discounts (
+	id integer primary key,
+	persent integer check (persent>0 and persent<100)
+);
+
+/* Заказы */
+create table orders (
+	id integer primary key,
+	order_date date,
+	order_number integer not null,
+	users_id integer references users (id),
+	discounts_id integer references discounts (id)
+);
+
+/* Поставщики */
+create table suppliers (
+	id integer primary key,
+	name varchar(255) not null,
+	phone varchar(255)
+);
+
+/* Категории */
+create table categories (
+	id integer primary key,
+	name varchar(255) not null
+);
+
+/* Товары */
+create table products (
+	id integer primary key,
+	name varchar(255) not null,
+	note varchar(1000),
+	picture varchar(255),
+	count integer not null check (count>=0),
+	categories_id integer references categories (id),
+	suppliers_id integer references suppliers (id)
+);
+
+/* История цен */
+create table price_history (
+	id integer primary key,
+	price integer not null check (price>0),
+	begin_date date not null,
+	products_id integer references products (id)
+);
+
+/* Детали заказа */
+create table order_details (
+	id integer primary key,
+	products_id integer references products (id),
+	count integer not null check (count>0),
+	orders_id integer references orders (id)
+);
+
+show tables;

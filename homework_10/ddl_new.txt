@@ -1,0 +1,70 @@
+create database my_pr_new;
+use my_pr_new;
+
+/* Пользователи */ 
+create table users (
+	id serial primary key,
+	username varchar(255) unique, 
+	registration_date date
+);
+
+/* Скидки */
+create table discounts (
+	id serial primary key,
+	persent tinyint unsigned check (persent<100)
+);
+
+/* Заказы */
+create table orders (
+	id serial primary key,
+	order_date date,
+	order_number integer not null,
+	users_id integer references users (id),
+	discounts_id integer references discounts (id)
+);
+
+/* Поставщики */
+create table suppliers (
+	id serial primary key,
+	info json not null
+);
+
+insert into suppliers (info) values 
+	('{"name": "Поставщик 1", "phone": "235-85-74"}'),
+	('{"name": "Поставщик 2", "phone": "147852"}'),
+	('{"name": "Поставщик 3", "phone": "89131478596"}');
+
+/* Категории */
+create table categories (
+	id serial primary key,
+	name varchar(255) not null
+);
+
+/* Товары */
+create table products (
+	id serial primary key,
+	name varchar(255) not null,
+	note varchar(1000),
+	picture varchar(255),
+	count integer unsigned not null,
+	categories_id integer references categories (id),
+	suppliers_id integer references suppliers (id)
+);
+
+/* История цен */
+create table price_history (
+	id serial primary key,
+	price decimal(10,2) unsigned not null,
+	begin_date date not null,
+	products_id integer references products (id)
+);
+
+/* Детали заказа */
+create table order_details (
+	id serial primary key,
+	products_id integer references products (id),
+	count integer unsigned not null,
+	orders_id integer references orders (id)
+);
+
+show tables;
