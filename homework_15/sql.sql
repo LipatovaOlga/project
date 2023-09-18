@@ -35,3 +35,18 @@ create index index_date on price_history (end_date);
 |  1 | SIMPLE      | pr    | NULL       | ref    | index_date                 | index_date      | 4       | const                    |    4 |    14.29 | Using index condition; Using where         |
 +----+-------------+-------+------------+--------+----------------------------+-----------------+---------+--------------------------+------+----------+--------------------------------------------+
 5 rows in set, 1 warning (0.04 sec)
+
+-- трейс оптимизатора
+SET optimizer_trace="enabled=on";
+SET optimizer_trace="enabled=off";
+
++----+-------------+-------+------------+--------+----------------------------+-----------------+---------+--------------------------+------+----------+--------------------------------------------+
+| id | select_type | table | partitions | type   | possible_keys              | key             | key_len | ref                      | rows | filtered | Extra                                      |
++----+-------------+-------+------------+--------+----------------------------+-----------------+---------+--------------------------+------+----------+--------------------------------------------+
+|  1 | SIMPLE      | u     | NULL       | const  | PRIMARY,id,username        | username        | 1023    | const                    |    1 |   100.00 | Using index                                |
+|  1 | SIMPLE      | o     | NULL       | ref    | PRIMARY,id,index_or_num_us | index_or_num_us | 9       | const,const              |    1 |   100.00 | Using where; Using index                   |
+|  1 | SIMPLE      | od    | NULL       | ALL    | NULL                       | NULL            | NULL    | NULL                     |   12 |    10.00 | Using where; Using join buffer (hash join) |
+|  1 | SIMPLE      | p     | NULL       | eq_ref | PRIMARY,id                 | PRIMARY         | 8       | my_pr_new.od.products_id |    1 |   100.00 | Using where                                |
+|  1 | SIMPLE      | pr    | NULL       | ref    | index_date                 | index_date      | 4       | const                    |    4 |    14.29 | Using index condition; Using where         |
++----+-------------+-------+------------+--------+----------------------------+-----------------+---------+--------------------------+------+----------+--------------------------------------------+
+5 rows in set, 1 warning (0.00 sec)
