@@ -1,0 +1,15 @@
+ДОБАВЛЕНИЕ ОДНОГО ДОКУМЕНТА
+db.suppliers.insertOne({"name": "Поставщик 1", "phone": "235-85-74"})
+
+ДОБАВЛЕНИЕ МНОЖЕСТВА ДОКУМЕНТОВ
+db.suppliers.insertMany([{"name": "Поставщик 2", "phone": "147852"}, 
+{"name": "Поставщик 3", "phone": "89131478596"}])
+
+ВЫБОРКА ВСЕХ ДОУМЕНТОВ
+db.suppliers.find()
+
+ПОИСК
+db.suppliers.find({name: "Поставщик 2"})
+
+ОБНОВЛЕНИЕ
+db.suppliers.updateOne({name : "Поставщик 2", "phone": "147852"}, {$set: {phone : 777}})
